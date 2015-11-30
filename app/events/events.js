@@ -15,7 +15,7 @@ angular.module('events', [
   .state('events.register', {
     url: '/register',
     views: {
-      
+
     }
   });
 });
