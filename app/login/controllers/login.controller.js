@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('login')
-.controller('LoginCtrl', function (LoginService, $ionicPopup, $state, $log) {
+.controller('LoginCtrl', function (LoginService, $ionicPopup, $state) {
   var ctrl = this;
 
   ctrl.creds = {};

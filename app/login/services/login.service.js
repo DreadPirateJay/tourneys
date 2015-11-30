@@ -1,29 +1,10 @@
 'use strict';
 
 angular.module('login')
-.service('LoginService', function ($q) {
+.service('LoginService', function ($q, $http) {
   return {
     loginUser: function (name, pw) {
-      var deferred = $q.defer();
-      var promise = deferred.promise;
-
-      if (name === 'user' && pw === 'secret') {
-        deferred.resolve('Welcome ' + name + '!');
-      } else {
-        deferred.reject('Wrong credentials.');
-      }
-
-      promise.success = function (fn) {
-        promise.then(fn);
-        return promise;
-      };
-
-      promise.error = function (fn) {
-        promise.then(null, fn);
-        return promise;
-      };
-
-      return promise;
+      return $http.get('https://dev.tourneyx.com/api/v1/post.json?action=user_login&username=' + name + '&password=' + pw);
     }
   };
 });

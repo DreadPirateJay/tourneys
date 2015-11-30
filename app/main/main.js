@@ -6,6 +6,7 @@ angular.module('main', [
   // TODO: load other modules selected during generation
 ])
 .config(function ($stateProvider) {
+  $urlRouterProvider.otherwise('/main/list');
 
   // ROUTING with ui.router
   $stateProvider
