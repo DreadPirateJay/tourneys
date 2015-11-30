@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('login')
-.service('LoginService', function ($q, $http) {
+.service('LoginService', function ($q, $http, Config) {
   return {
     loginUser: function (name, pw) {
-      return $http.get('https://dev.tourneyx.com/api/v1/post.json?action=user_login&username=' + name + '&password=' + pw);
+      return $http.post(Config.ENV.SERVER_URL, { username: name, password: pw });
     }
   };
 });

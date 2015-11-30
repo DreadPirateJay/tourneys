@@ -1,5 +1,5 @@
 'use strict';
-angular.module('TourneyX', [
+angular.module('Tourneys', [
   'login',
   'main',
 ]);

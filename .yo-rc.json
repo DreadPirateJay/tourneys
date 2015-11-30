@@ -1,8 +1,8 @@
 {
   "generator-m-ionic": {
     "answers": {
-      "appName": "TourneyX",
-      "appId": "com.dreadpiratejay.tourneyx",
+      "appName": "Tourneys",
+      "appId": "com.dreadpiratejay.tourneys",
       "ionicCss": false,
       "bowerPackages": [
         "angular-dynamic-locale#~0.1.27",
@@ -23,7 +23,7 @@
         "cordova-plugin-splashscreen",
         "cordova-plugin-statusbar"
       ],
-      "appModule": "TourneyX"
+      "appModule": "Tourneys"
     }
   }
 }
