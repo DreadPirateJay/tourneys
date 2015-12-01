@@ -7,7 +7,7 @@ angular.module('main')
   ENV: {
     /*inject-env*/
     'SERVER_URL': 'http://localhost:8080/api/v1/',
-    'LOGIN_URL': 'http://localhost:8080/api/v1/post.json?action=user_login'
+    'LOGIN_URL': 'http://dev.tourneyx.com/api/v1/post.json?action=user_login'
     /*endinject*/
   },
 
