@@ -16,11 +16,9 @@ angular.module('login')
   ) {
     var ctrl = this;
 
-    console.log($rootScope.online);
-
     $localForage.getItem('userId').then(function (userId) {
       if (userId) {
-        $state.go('main.list');
+        // $state.go('main.list');
       }
     });
 

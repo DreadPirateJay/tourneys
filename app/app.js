@@ -1,5 +1,6 @@
 'use strict';
 angular.module('Tourneys', [
+  'indicator',
   'login',
   'main',
   'LocalForageModule',
