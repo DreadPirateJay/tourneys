@@ -6,25 +6,24 @@ angular.module('login')
   '$ionicPopup',
   '$state',
   '$localForage',
-  '$rootScope',
   function (
     LoginService,
     $ionicPopup,
     $state,
-    $localForage,
-    $rootScope
+    $localForage
   ) {
     var ctrl = this;
 
-    $localForage.getItem('userId').then(function (userId) {
-      if (userId) {
-        // $state.go('main.list');
-      }
-    });
+    // $localForage.getItem('userId').then(function (userId) {
+    //   if (userId) {
+    //     $state.go('main.list');
+    //   }
+    // });
 
     ctrl.creds = {};
 
     ctrl.login = function () {
+      console.log('login');
       LoginService.loginUser(ctrl.creds.username, ctrl.creds.password).success(function (data) {
         $localForage.setItem('userId', data.data);
         $state.go('main.list');

@@ -20,9 +20,9 @@ angular.module('main', [
         views: {
           'tab-list': {
             templateUrl: 'main/templates/list.html',
-            // controller: 'SomeCtrl as ctrl'
+            controller: 'ListCtrl as ctrl',
           }
-        }
+        },
       })
       .state('main.listDetail', {
         url: '/list/detail',
@@ -33,12 +33,12 @@ angular.module('main', [
           }
         }
       })
-      .state('main.debug', {
-        url: '/debug',
+      .state('main.submit', {
+        url: '/list/submit',
         views: {
-          'tab-debug': {
-            templateUrl: 'main/templates/debug.html',
-            controller: 'DebugCtrl as ctrl'
+          'tab-submit': {
+            templateUrl: 'main/templates/submit.html',
+            controller: 'SubmitCtrl as ctrl',
           }
         }
       });
