@@ -1,80 +1,88 @@
-'use strict';
 var gulp = require('gulp');
-var minimist = require('minimist');
-var requireDir = require('require-dir');
-var chalk = require('chalk');
-var fs = require('fs');
+var gutil = require('gulp-util');
+var bower = require('bower');
+var concat = require('gulp-concat');
+var sass = require('gulp-sass');
+var minifyCss = require('gulp-minify-css');
+var rename = require('gulp-rename');
+var sh = require('shelljs');
+var wiredep = require('wiredep');
+var $ = require('gulp-load-plugins')();
+var mainBowerFiles = require('main-bower-files');
 
-// config
-gulp.paths = {
-  dist: 'www',
-  jsFiles: ['app/**/*.js', '!app/bower_components/**/*.js'],
-  jsonFiles: ['app/**/*.json', '!app/bower_components/**/*.json'],
-  templates: ['app/*/templates/**/*'],
-  karma: ['test/karma/**/*.js'],
-  protractor: ['test/protractor/**/*.js']
+var paths = {
+  sass: ['./scss/**/*.scss'],
+  bower: ['./www/lib/**/*.js'],
+  js: ['./www/js/**/*.js'],
+  html: ['./www/**/*.html'],
+  fonts: './www/fonts'
 };
 
-// OPTIONS
-var options = gulp.options = minimist(process.argv.slice(2));
+gulp.task('default', ['sass']);
 
-// set defaults
-var task = options._[0]; // only for first task
-var gulpSettings;
-if (fs.existsSync('./gulp/.gulp_settings.json')) {
-  gulpSettings = require('./gulp/.gulp_settings.json');
-  var defaults = gulpSettings.defaults;
-  if (defaults) {
-    // defaults present for said task?
-    if (task && task.length && defaults[task]) {
-      var taskDefaults = defaults[task];
-      // copy defaults to options object
-      for (var key in taskDefaults) {
-        // only if they haven't been explicitly set
-        if (options[key] === undefined) {
-          options[key] = taskDefaults[key];
-        }
-      }
-    }
-  }
-}
+gulp.task('sass', function(done) {
+  gulp.src('./scss/ionic.app.scss')
+    .pipe(sass())
+    .on('error', sass.logError)
+    .pipe(gulp.dest('./www/css/'))
+    .pipe(minifyCss({
+      keepSpecialComments: 0
+    }))
+    .pipe(rename({ extname: '.min.css' }))
+    .pipe(gulp.dest('./www/css/'))
+    .on('end', done);
+});
 
-// environment
-options.env = options.env || 'dev';
-// print options
-if (defaults && defaults[task]) {
-  console.log(chalk.green('defaults for task \'' + task + '\': '), defaults[task]);
-}
-// cordova command one of cordova's build commands?
-if (options.cordova) {
-  var cmds = ['build', 'run', 'emulate', 'prepare', 'serve'];
-  for (var i = 0, cmd; ((cmd = cmds[i])); i++) {
-    if (options.cordova.indexOf(cmd) >= 0) {
-      options.cordovaBuild = true;
-      break;
-    }
-  }
-}
+gulp.task('watch', function() {
+  gulp.watch(paths.sass, ['sass']);
+  gulp.watch([paths.js, paths.html], ['inject']);
+});
 
-// load tasks
-requireDir('./gulp');
+gulp.task('install', ['git-check'], function() {
+  return bower.commands.install()
+    .on('log', function(data) {
+      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+    });
+});
 
-// default task
-gulp.task('default', function () {
-  // cordova build command & gulp build
-  if (options.cordovaBuild && options.build !== false) {
-    return gulp.start('cordova-with-build');
+gulp.task('git-check', function(done) {
+  if (!sh.which('git')) {
+    console.log(
+      '  ' + gutil.colors.red('Git is not installed.'),
+      '\n  Git, the version control system, is required to download Ionic.',
+      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
+      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
+    );
+    process.exit(1);
   }
-  // cordova build command & no gulp build
-  else if (options.cordovaBuild && options.build === false) {
-    return gulp.start('cordova-only-resources');
-  }
-  // cordova non-build command
-  else if (options.cordova) {
-    return gulp.start('cordova');
-  }
-  // just watch when cordova option not present
-  else {
-    return gulp.start('watch');
-  }
+  done();
+});
+
+gulp.task('wiredep', function () {
+  return gulp.src('www/index.html')
+    // exclude ionic scss since we're using ionic sass
+    .pipe(wiredep.stream({exclude: ['./www/lib/ionic/release/css']}))
+    .pipe(gulp.dest('www/'));
+});
+
+gulp.task('inject', ['wiredep', 'bower-fonts'], function () {
+  return gulp.src('www/index.html')
+    .pipe(
+      $.inject(
+        gulp.src(paths.js)
+          .pipe($.plumber()) // use plumber so watch can start despite js errors
+          .pipe($.naturalSort())
+          .pipe($.angularFilesort()),
+        {relative: true}))
+    .pipe(gulp.dest('www'));
+});
+
+// copy bower fonts
+gulp.task('bower-fonts', function () {
+  var fontFiles = mainBowerFiles({filter: /\.(eot|otf|svg|ttf|woff|woff2)$/i})
+    .concat(paths.fonts + '/**/*');
+
+  return gulp.src(fontFiles)
+    .pipe($.changed(paths.fonts))
+    .pipe(gulp.dest(paths.fonts));
 });

@@ -1,0 +1,5 @@
+{
+  "name": "ionic-tourneys",
+  "app_id": "",
+  "gulpStartupTasks": ["sass", "inject", "watch"]
+}
