@@ -21,4 +21,19 @@ $ionicons-font-path: "../assets/fonts" !default;
 // Include all of Ionic
 @import "../../bower_components/ionic/scss/ionic";
 
+ion-nav-view[name="tab-submit"] {
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+// .scroll {
+//   height: 100%;
+// }
 

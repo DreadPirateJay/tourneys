@@ -5,9 +5,7 @@ angular.module('login', [
   'ngCordova',
   'ui.router',
 ])
-.config(function ($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/main/list');
-
+.config(function ($stateProvider) {
   $stateProvider
   .state('login', {
     url: '/login',

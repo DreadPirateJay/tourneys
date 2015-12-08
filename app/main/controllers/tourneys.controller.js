@@ -1,6 +1,6 @@
 'use strict';
 angular.module('main')
-.controller('ListCtrl', ['$scope', function ($scope) {
+.controller('TourneysCtrl', ['$scope', function ($scope) {
   $scope.tourneys = [
     { id: 1, title: 'Club Tournaments', icon: 'ion-trophy' },
     { id: 2, title: 'Charity Tournaments', icon: 'ion-trophy' },

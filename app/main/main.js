@@ -5,7 +5,8 @@ angular.module('main', [
   'ui.router',
   // TODO: load other modules selected during generation
 ])
-.config(function ($stateProvider) {
+.config(function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/main/tourneys');
 
   // ROUTING with ui.router
   $stateProvider
@@ -15,12 +16,12 @@ angular.module('main', [
       abstract: true,
       templateUrl: 'main/templates/tabs.html'
     })
-      .state('main.list', {
-        url: '/list',
+      .state('main.tourneys', {
+        url: '/tourneys',
         views: {
-          'tab-list': {
-            templateUrl: 'main/templates/list.html',
-            controller: 'ListCtrl as ctrl',
+          'tab-tourneys': {
+            templateUrl: 'main/templates/tourneys.html',
+            controller: 'TourneysCtrl as ctrl',
           }
         },
       })
